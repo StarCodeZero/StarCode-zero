@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Визуальная новелла</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .container {
+            display: flex;
+            width: 80%;
+            max-width: 800px;
+            height: 400px;
+            background-color: #222;
+            border: 2px solid #fff;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .profile {
+            width: 30%;
+            background-color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+        }
+        .profile img {
+            width: 100%;
+            max-width: 120px;
+            border-radius: 50%;
+        }
+        .dialog {
+            width: 70%;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .dialog p {
+            font-size: 18px;
+            margin: 0 0 20px;
+            white-space: pre-wrap;
+        }
+        .choices {
+            display: flex;
+            gap: 10px;
+        }
+        .choices button {
+            flex: 1;
+            padding: 10px;
+            background-color: #444;
+            color: #fff;
+            border: 1px solid #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .choices button:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="profile">
+            <!-- Вставьте ссылку на изображение персонажа -->
+            <img id="character-sprite" src="https://via.placeholder.com/120" alt="Character">
+        </div>
+        <div class="dialog">
+            <p id="dialog-text"></p>
+            <div class="choices">
+                <!-- Кнопки выбора будут добавляться динамически -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const dialogs = [
+            {
+                text: "Знаешь, что такое мажоритарное голосование?",
+                sprite: "https://via.placeholder.com/120", // Изображение для этого диалога
+                choices: [
+                    { text: "Естественно!", next: 1 },
+                    { text: "Понятия не имею", next: 2 }
+                ]
+            },
+            {
+                text: "Это система, где побеждает тот, кто набрал большинство голосов.",
+                sprite: "https://via.placeholder.com/120",
+                choices: []
+            },
+            {
+                text: "Это что-то связанное с выборами. Давай разберемся!",
+                sprite: "https://via.placeholder.com/120",
+                choices: []
+            }
+        ];
+
+        const dialogText = document.getElementById('dialog-text');
+        const spriteImg = document.getElementById('character-sprite');
+        const choicesContainer = document.querySelector('.choices');
+
+        let charIndex = 0;
+        let currentDialogIndex = 0;
+
+        function typeText(text, callback) {
+            charIndex = 0;
+            dialogText.textContent = '';
+            const interval = setInterval(() => {
+                dialogText.textContent += text[charIndex];
+                charIndex++;
+                if (charIndex >= text.length) {
+                    clearInterval(interval);
+                    if (callback) callback();
+                }
+            }, 50); // Скорость печати
+        }
+
+        function showDialog(index) {
+            const dialog = dialogs[index];
+            currentDialogIndex = index;
+
+            // Обновляем изображение персонажа
+            spriteImg.src = dialog.sprite;
+
+            // Печатаем текст
+            typeText(dialog.text, () => {
+                // После печати текста показываем кнопки
+                showChoices(dialog.choices);
+            });
+        }
+
+        function showChoices(choices) {
+            choicesContainer.innerHTML = '';
+            choices.forEach((choice, index) => {
+                const button = document.createElement('button');
+                button.textContent = choice.text;
+                button.onclick = () => makeChoice(choice.next);
+                choicesContainer.appendChild(button);
+            });
+        }
+
+        function makeChoice(nextIndex) {
+            if (nextIndex !== undefined) {
+                showDialog(nextIndex);
+            }
+        }
+
+        // Инициализация первого диалога
+        showDialog(0);
+    </script>
+</body>
+</html>

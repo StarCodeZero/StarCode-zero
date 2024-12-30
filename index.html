@@ -8,7 +8,7 @@
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            background-color: #000;
+            background: radial-gradient(circle at center, #1a1a2e, #16213e, #0f3460);
             color: #fff;
             display: flex;
             justify-content: center;
@@ -30,44 +30,55 @@
             flex-direction: column;
             align-items: center;
             gap: 20px;
+            animation: fadeIn 1s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         .start-screen h1 {
-            font-size: 32px;
+            font-size: 36px;
             margin: 0;
+            color: #ffcccb;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
         }
         .start-screen p {
-            font-size: 18px;
+            font-size: 20px;
             margin: 0;
         }
         .start-screen .social-links {
             display: flex;
-            gap: 10px;
+            gap: 15px;
         }
         .start-screen .social-links a {
             color: #fff;
             text-decoration: none;
-            background-color: #444;
+            background: linear-gradient(45deg, #6a0572, #a23b72);
             padding: 10px 20px;
             border-radius: 5px;
-            font-size: 16px;
-            transition: background-color 0.3s;
+            font-size: 18px;
+            transition: transform 0.3s, background 0.3s;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
         }
         .start-screen .social-links a:hover {
-            background-color: #666;
+            background: linear-gradient(45deg, #a23b72, #6a0572);
+            transform: scale(1.1);
         }
         .game-container {
             display: none;
             width: 80%;
             max-width: 800px;
             height: 400px;
-            background-color: #222;
-            border: 2px solid #fff;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #ffcccb;
             border-radius: 10px;
             overflow: hidden;
+            animation: fadeIn 1s ease-in-out;
+            box-shadow: 0px 4px 20px rgba(255, 204, 203, 0.5);
         }
         .profile {
             width: 30%;
-            background-color: #333;
+            background-color: rgba(255, 204, 203, 0.1);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -77,6 +88,7 @@
             width: 100%;
             max-width: 120px;
             border-radius: 50%;
+            border: 2px solid #ffcccb;
         }
         .dialog {
             width: 70%;
@@ -86,26 +98,30 @@
             justify-content: space-between;
         }
         .dialog p {
-            font-size: 18px;
+            font-size: 20px;
             margin: 0 0 20px;
             white-space: pre-wrap;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
         }
         .choices {
             display: flex;
-            gap: 10px;
+            gap: 15px;
         }
         .choices button {
             flex: 1;
             padding: 10px;
-            background-color: #444;
+            background: linear-gradient(45deg, #ffcccb, #6a0572);
             color: #fff;
-            border: 1px solid #fff;
+            border: none;
             border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
+            transition: transform 0.3s, background 0.3s;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
         }
         .choices button:hover {
-            background-color: #555;
+            background: linear-gradient(45deg, #6a0572, #ffcccb);
+            transform: scale(1.1);
         }
     </style>
 </head>
@@ -139,7 +155,7 @@
         const dialogs = [
             {
                 text: "Знаешь, что такое мажоритарное голосование?",
-                sprite: "https://via.placeholder.com/120", // Изображение для этого диалога
+                sprite: "https://via.placeholder.com/120",
                 choices: [
                     { text: "Естественно!", next: 1 },
                     { text: "Понятия не имею", next: 2 }
@@ -165,18 +181,21 @@
 
         let charIndex = 0;
         let currentDialogIndex = 0;
+        let typingComplete = false;
 
         function typeText(text, callback) {
             charIndex = 0;
+            typingComplete = false;
             dialogText.textContent = '';
             const interval = setInterval(() => {
                 dialogText.textContent += text[charIndex];
                 charIndex++;
                 if (charIndex >= text.length) {
                     clearInterval(interval);
+                    typingComplete = true;
                     if (callback) callback();
                 }
-            }, 50); // Скорость печати
+            }, 50);
         }
 
         function showDialog(index) {
@@ -198,7 +217,9 @@
             choices.forEach((choice, index) => {
                 const button = document.createElement('button');
                 button.textContent = choice.text;
-                button.onclick = () => makeChoice(choice.next);
+                button.onclick = () => {
+                    if (typingComplete) makeChoice(choice.next);
+                };
                 choicesContainer.appendChild(button);
             });
         }

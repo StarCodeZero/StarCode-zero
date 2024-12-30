@@ -18,6 +18,45 @@
         }
         .container {
             display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            width: 100%;
+            max-width: 800px;
+        }
+        .start-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        .start-screen h1 {
+            font-size: 32px;
+            margin: 0;
+        }
+        .start-screen p {
+            font-size: 18px;
+            margin: 0;
+        }
+        .start-screen .social-links {
+            display: flex;
+            gap: 10px;
+        }
+        .start-screen .social-links a {
+            color: #fff;
+            text-decoration: none;
+            background-color: #444;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .start-screen .social-links a:hover {
+            background-color: #666;
+        }
+        .game-container {
+            display: none;
             width: 80%;
             max-width: 800px;
             height: 400px;
@@ -72,14 +111,26 @@
 </head>
 <body>
     <div class="container">
-        <div class="profile">
-            <!-- Вставьте ссылку на изображение персонажа -->
-            <img id="character-sprite" src="https://via.placeholder.com/120" alt="Character">
+        <div class="start-screen" id="start-screen">
+            <h1>Добро пожаловать в визуальную новеллу</h1>
+            <p>Интерактивная история, где вы делаете выборы.</p>
+            <div class="social-links">
+                <a href="https://vk.com" target="_blank">VK</a>
+                <a href="https://telegram.org" target="_blank">Telegram</a>
+                <a href="https://twitter.com" target="_blank">Twitter</a>
+            </div>
+            <button onclick="startGame()">Начать игру</button>
         </div>
-        <div class="dialog">
-            <p id="dialog-text"></p>
-            <div class="choices">
-                <!-- Кнопки выбора будут добавляться динамически -->
+
+        <div class="game-container" id="game-container">
+            <div class="profile">
+                <img id="character-sprite" src="https://via.placeholder.com/120" alt="Character">
+            </div>
+            <div class="dialog">
+                <p id="dialog-text"></p>
+                <div class="choices">
+                    <!-- Кнопки выбора будут добавляться динамически -->
+                </div>
             </div>
         </div>
     </div>
@@ -109,6 +160,8 @@
         const dialogText = document.getElementById('dialog-text');
         const spriteImg = document.getElementById('character-sprite');
         const choicesContainer = document.querySelector('.choices');
+        const startScreen = document.getElementById('start-screen');
+        const gameContainer = document.getElementById('game-container');
 
         let charIndex = 0;
         let currentDialogIndex = 0;
@@ -156,8 +209,11 @@
             }
         }
 
-        // Инициализация первого диалога
-        showDialog(0);
+        function startGame() {
+            startScreen.style.display = 'none';
+            gameContainer.style.display = 'flex';
+            showDialog(0);
+        }
     </script>
 </body>
 </html>
